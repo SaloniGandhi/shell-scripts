@@ -1,0 +1,62 @@
+date=`date +%Y%m%d`
+dateFormatted=`date -R`
+s3Bucket="s-upload1"
+fileName="testvdo.mp4"
+relativePath="/${s3Bucket}/${fileName}"
+contentType="application/octet-stream"
+stringToSign="PUT\n\n${contentType}\n${dateFormatted}\n${relativePath}"
+s3AccessKey="AKIAJOFS6CLZPGIHNATQ"
+s3SecretKey="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"
+signature=`echo -en ${stringToSign} | openssl sha1 -hmac ${s3SecretKey} -binary | base64`
+4
+ 
+ 
+ 
+ sakshi
+ ===========================================================
+ date=`date +%Y%m%d`
+dateFormatted=`date -R`
+s3Bucket="src-cloud-bucket"
+fileName="dest.png"
+relativePath="/${s3Bucket}/${fileName}"
+contentType="application/octet-stream"
+stringToSign="PUT\n\n${contentType}\n${dateFormatted}\n${relativePath}"
+s3AccessKey="AKIAJJSYZRSZEKEZPGJA"
+s3SecretKey="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"
+signature=`echo -en ${stringToSign} | openssl sha1 -hmac ${s3SecretKey} -binary | base64`
+curl -X PUT -T "${fileName}" \
+-H "Host: ${s3Bucket}.s3.amazonaws.com" \
+-H "Date: ${dateFormatted}" \
+-H "Content-Type: ${contentType}" \
+-H "Authorization: AWS ${s3AccessKey}:${signature}" \
+ http://${s3Bucket}.s3.amazonaws.com/${fileName}
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ ===============================================
+ 
+ 
+ 
+ seq 4 | parallel -j2 "curl -X PUT -T "${fileName}" -H "Host: ${s3Bucket}.s3.amazonaws.com" -H "Date: ${dateFormatted}" -H "Content-Type: ${contentType}" -H "Authorization: AWS ${s3AccessKey}:${signature}"  http://${s3Bucket}.s3.amazonaws.com/${fileName}"
+ 
+ 
+ 
+ ================================================================================================
+ seq 4 | parallel -j2 curl -X PUT -T ${fileName} -H "Host: ${s3Bucket}.s3.amazonaws.com" -H "Date: ${dateFormatted}" -H "Content-Type: ${contentType}" -H "Authorization: AWS ${s3AccessKey}:${signature}"  http://${s3Bucket}.s3.amazonaws.com/${fileName}
+s
+ 
+ 
+ seq 4 | parallel -j2 echo -X PUT -T "$fileName" -H "Host: $s3Bucket.s3.amazonaws.com" -H "Date: $dateFormatted" -H "Content-Type: $contentType" -H "Authorization: AWS $s3AccessKey:$signature"  -- "http://$s3Bucket.s3.amazonaws.com/$fileName"
+ 
+ 
+  for _ in `seq 5` ; do   curl -X PUT -T "$fileName" -H "Host: $s3Bucket.s3.amazonaws.com" -H "Date: $dateFormatted" -H "Content-Type: $contentType" -H "Authorization: AWS $s3AccessKey:$signature"  -- "http://$s3Bucket.s3.amazonaws.com/$fileName" > out$_.txt 2>&1 & done
+
+
+
+for _ in `seq 5` ; do curl https://xu2n0sa3i3.execute-api.us-east-1.amazonaws.com/dev/videos & done
